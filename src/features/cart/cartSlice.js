@@ -10,15 +10,17 @@ const initialState = {
   isLoading: true,
 };
 
-export const getcartItems = createAsyncThunk("cart/getCartItems", async (name, thunkAPI) => {
-  try {
-    const response = await axios.get(url)
-    return response.data
-  } catch (error) {
-    thunkAPI.rejectWithValue('something went wrong')
+export const getcartItems = createAsyncThunk(
+  "cart/getCartItems",
+  async (name, thunkAPI) => {
+    try {
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      thunkAPI.rejectWithValue("something went wrong");
+    }
   }
-
-});
+);
 
 const cartSlice = createSlice({
   name: "cart",
@@ -65,20 +67,19 @@ const cartSlice = createSlice({
     },
   },
 
-  extraReducers: {
-    [getcartItems.pending]: (state) => {
-      state.isLoading = true;
-    },
-
-    [getcartItems.fulfilled]: (state, action) => {
-      state.isLoading = false;
-      state.cartItems = action.payload;
-    },
-    [getcartItems.rejected]: (state, action) => {
-      state.isLoading = false;
-      state.cartItems = action.payload
-
-    },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getcartItems.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getcartItems.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.cartItems = action.payload;
+      })
+      .addCase(getcartItems.rejected, (state, action) => {
+        state.isLoading = false;
+        state.cartItems = action.payload;
+      });
   },
 });
 
